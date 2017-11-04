@@ -1,0 +1,12 @@
+################################################################
+#
+# Python package requirements for lattice_gauge_theory:
+# https://github.com/saforem2/lattice_gauge_theory
+#
+################################################################
+
+numpy
+scipy
+jupyter
+matplotlib
+scikit-learn
