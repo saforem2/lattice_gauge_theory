@@ -120,6 +120,99 @@ class Lattice(object):
             None
         """
 
+    def connected_site_pairs(self):
+        """
+        Returns a dictionary of all connections between pairs of sites.
+
+        Example:
+            For a linear lattice A-B-C, will return:
+                {'A': ['B'], 'B': ['A', 'C'], 'C': ['B']}
+
+        Args:
+            None
+
+        Returns:
+            site_connections (dict{list[str]}): A dictionary of neighboring
+            site types in the lattice.
+        """
+        site_connections = {}
+        for initial_site in self.sites:
+            if not initial_site.label in site_connections:
+                site_connections[initial_site.label] = []
+            for final_site in initial_site.p_neighbors:
+                if final_site.label not in (
+                    site_connections[ initial_site.label]
+                ):
+                    site_connections[initial_site.label].append(
+                        final_site.label
+                    )
+        return site_connections
+
+    def connected_sites(self, site_labels=None):
+        """
+        Searches the lattice to find sets of contiguously neighbored sites.
+        Mutually exclusive sets of contiguous sites are returned as Cluster
+        objects.
+
+        Args:
+            site_labels (:obj:(list(str)|set(str)|str), optional): Labels for
+            sites to be considered in the search. This can be:
+                a list::
+                    ['A', 'B']
+                a set::
+                    ('A', 'B')
+                or a string::
+                    'A'.
+
+        Returns:
+            (list(Cluster)): List of Cluster objects for groups of contiguous
+            sites.
+        """
+        if site_labels:
+            selected_sites = self.selec_sites(site_labels)
+        else:
+            selected_sites = self.sites
+        initial_clusters = [cluster.Cluster([site]) for site in selected_sites]
+        if site_labels:
+            blocking_sites = self.site_labels - set(site_labels)
+            for c in initial_clusters:
+                c.remove_sites_from_neighbors(blocking_sites)
+        final_clusters = []
+        while initial_clusters: # loop until initial_clusters is empty
+            this_cluster = initial_clusters.pop(0)
+            while this_cluster.neighbors:
+                neighboring_clusters = [c for c in initial_clusters if
+                                        this_cluster.is_neighboring(c)]
+                for nc in neighboring_clusters:
+                    initial_clusters.remove(nc)
+                    this_cluster = this_cluster.merge(nc)
+            final_clusters.append(this_cluster)
+        return final_clusters
+
+    def select_sites(self, site_labels):
+        """
+        Selects sites in the lattice with specified labels.
+
+        Args:
+            site_labels (list(str)|set(str)|str): Labels of sites to select.
+            This can be a list ['A', 'B'], a set ('A', 'B'), or a string 'A'.
+
+        Returns:
+            list(Site): List of sites with labels given by 'site_labels'.
+        """
+        if type(site_labels) in (list, set):
+            selected_sites = [s for s in self.sites if s.label in site_labels]
+        elif type(site_labels) is str:
+            selected_sites = [s for s in self.sites if s.label is site_labels]
+        else:
+            return ValueError(str(site_labels))
+        return selected_sites
+
+
+
+
+
+
 
 
 
