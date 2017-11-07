@@ -32,7 +32,6 @@ class Cluster(object):
             self.neighbors | other_cluster.neighbors).difference(
                 new_cluster.sites
             )
-        )
         return new_cluster
 
     def is_neighboring(self, other_cluster):

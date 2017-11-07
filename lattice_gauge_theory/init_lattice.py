@@ -1,5 +1,3 @@
-""" Functions for constructing lattices. """
-
 import numpy as np
 from lattice_gauge_theory import lattice, lattice_site
 import re
