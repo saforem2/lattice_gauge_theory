@@ -8,7 +8,7 @@ from collections import Counter
 class Lattice(object):
     """ Lattice class. """
 
-    def __init__(self, sites, cell_lengths):
+    def __init__(self, sites, cell_lengths, dim):
         """
         Initialize a Lattice instance.
 
@@ -16,12 +16,15 @@ class Lattice(object):
             sites (List(Site)): List of sites contained in the lattice.
             cell_lengths (np.array(x,y,z)): Vector of cell lengths for
                 fundamental cell.
+                dim (int): number of spatial dimensions
 
         Returns:
             None
         """
         self.cell_lengths = cell_lengths
         self.sites = sites
+        self.dimensions = dim
+        self.Nx, self.Ny, self.Nz = cell_lengths
         #  self.links = sites.links
         self.number_of_sites = len(self.sites)
         #  self.number_of_links = len(self.links)
@@ -32,6 +35,9 @@ class Lattice(object):
         self.nn_energy = False
         #  self.cn_energies = False
         #  self.site_energies = False
+        self.grid = np.array(
+            [site.number for site in self.sites]
+        ).reshape(cell_lengths[:self.dimensions].astype(int))
         self.jump_lookup_table = False
         for site in self.sites:
             site.p_neighbors = [self.site_with_id(i) for i in site.neighbors]
@@ -83,6 +89,10 @@ class Lattice(object):
         for site in self.sites:
             self.site_lookup[site.number] = site
 
+    def create_site_grid(self):
+        Nx, Ny, Nz = self.cell_lengths
+
+
     def site_with_id(self, number):
         """
         Select the site with a specific id number.
@@ -105,9 +115,10 @@ class Lattice(object):
         Returns:
             None.
         """
-        ######################################################
-        # TODO: Implement step to update link variables U_ij #
-        ######################################################
+        #######################################################
+        # TODO: Implement proposed update link variables U_ij #
+        #######################################################
+        pass
 
     def step(self):
         """
@@ -119,32 +130,40 @@ class Lattice(object):
         Returns:
             None
         """
+        ######################################################
+        # TODO: Implement step to update link variables U_ij #
+        ######################################################
+        pass
 
     def connected_site_pairs(self):
         """
         Returns a dictionary of all connections between pairs of sites.
 
         Example:
-            For a linear lattice A-B-C, will return:
-                {'A': ['B'], 'B': ['A', 'C'], 'C': ['B']}
+            For a linear lattice with four Sites with numbers 1, 2, 3, 4,
+            arranged as -- 1 - 2 - 3 - 4 -- (with periodic boundaries):
+                {1: [2, 4],
+                 2: [3, 1],
+                 3: [4, 2],
+                 4: [1, 3]}
 
         Args:
             None
 
         Returns:
-            site_connections (dict{list[str]}): A dictionary of neighboring
+            site_connections (dict{list[int]}): A dictionary of neighboring
             site types in the lattice.
         """
         site_connections = {}
         for initial_site in self.sites:
-            if not initial_site.label in site_connections:
-                site_connections[initial_site.label] = []
+            if not initial_site.number in site_connections:
+                site_connections[initial_site.number] = []
             for final_site in initial_site.p_neighbors:
                 if final_site.label not in (
-                    site_connections[ initial_site.label]
+                    site_connections[initial_site.number]
                 ):
-                    site_connections[initial_site.label].append(
-                        final_site.label
+                    site_connections[initial_site.number].append(
+                        final_site.number
                     )
         return site_connections
 

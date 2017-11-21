@@ -32,7 +32,9 @@ def square_lattice(a, b, spacing=1.0):
         ]
         sites.append(lattice_site.Site(int(it[0]), r, neighbors, 0.0, 'L'))
         it.iternext()
-    return lattice.Lattice(sites, cell_lengths=np.array([a, b, 0.0])*spacing)
+    return lattice.Lattice(sites,
+                           cell_lengths=np.array([a, b, 0.0])*spacing,
+                           dim=2)
 
 def cubic_lattice(a, b, c, spacing):
     """
@@ -62,6 +64,8 @@ def cubic_lattice(a, b, c, spacing):
         ]
         sites.append(lattice_site.Site(int(it[0]), r, neighbors, 0.0, 'L'))
         it.iternext()
-    return lattice.Lattice(sites, cell_lengths=np.array([a, b, c]) *spacing)
+    return lattice.Lattice(sites,
+                           cell_lengths=np.array([a, b, c]) *spacing,
+                           dim=3)
 
 

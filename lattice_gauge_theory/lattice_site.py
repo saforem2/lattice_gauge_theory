@@ -32,10 +32,8 @@ class Site(object):
         self.neighbors = neighbors
         self.p_neighbors = None    # ptr to neighboring sites. init in Lattice
         self.energy = energy
-        self.occupation = 0
+        #  self.occupation = 0
         #  self.atom = None
         #  self.is_occupied = False
         self.label = label
         #  self.time_occupied = 0.0
-
-
