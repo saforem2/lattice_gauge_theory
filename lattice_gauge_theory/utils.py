@@ -1,3 +1,4 @@
+from __future__ import division
 import numpy as np
 import itertools as it
 
@@ -69,7 +70,7 @@ def increment_array(arr, *increments, f=tuple):
         arr2[i[0]] += i[1]
     return f(arr2)
 
-def sp_links(site, d1, d2):
+def site_plaq_links(site, d1, d2):
     """
     Returns the plaquette links corresponding to the passed site, in the
     directions d1 and d2.
@@ -89,7 +90,7 @@ def sp_links(site, d1, d2):
             site + (d1,)
         )
 
-def lp_links(link, direction, sign):
+def link_plaq_links(link, direction, sign):
     """
     Returns the plaquette links corresponding to the passed link, direction and
     sign.
@@ -98,17 +99,15 @@ def lp_links(link, direction, sign):
         if direction > link[-1]:
             return (
                 link,
-                increment_array(link, (link[-1], 1)),
+                increment_array(link, (link[-1], 1), (-1, direction-link[-1])),
                 increment_array(link, (direction, 1)),
-                increment_array(link, (-1, direction - link[-1]))
+                increment_array(link, (-1, direction-link[-1]))
             )
         elif direction < link[-1]:
             return (
                 increment_array(link, (-1, direction - link[-1])),
-                increment_array(link, (direction, 1)),
-                increment_array(link,
-                                (link[-1], 1),
-                                (-1, direction - link[-1])),
+                increment_array(link, (direction,1)),
+                increment_array(link, (link[-1], 1), (-1, direction-link[-1])),
                 link
             )
     elif sign == -1:

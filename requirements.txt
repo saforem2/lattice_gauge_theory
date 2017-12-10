@@ -19,4 +19,5 @@ six>=1.11.0
 snowballstemmer>=1.2.1
 Sphinx>=1.6.5
 sphinxcontrib-websupport>=1.0.1
+sphinx_rtd_theme
 urllib3>=1.22

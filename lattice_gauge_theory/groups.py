@@ -1,8 +1,11 @@
+from __future__ import division
 import numpy as np
 from lattice_gauge_theory.utils import *
 
 def ZN(N, action=None):
-    """ Generates the group Z_N. """
+    """
+    Generates the group Z_N, and if 'action' is specified, returns the action.
+    """
     table = np.mod(np.arange(N) + np.reshape(np.arange(N), (N, 1)), N)
     names = np.array(['(w{})^{}'.format(N, i) for i in range(N)])
     G = IntGroup(table, names=names)
@@ -101,7 +104,25 @@ class IntGroup(object):
 
 
 
+########################### Some groups: ##########################
+# Klein 4-group:
+TKlein = np.array([[0,1,2,3],[1,0,3,2],[2,3,0,1],[3,2,1,0]])
+Klein = IntGroup(TKlein)
+KDaction = lambda a: float(a!=Klein.id)
 
+# Quaternion group:
+# The element identification is 1->0, -1->1, i->2,-i->3,j->4,-j->5,k->6,-k->7
+Qnames = ['1','-1','i','-i','j','-j','k','-k']
+TQ = np.array([	[0,1,2,3,4,5,6,7],
+				[1,0,3,2,5,4,7,6],
+				[2,3,1,0,6,7,5,4],
+				[3,2,0,1,7,6,4,5],
+				[4,5,7,6,1,0,2,3],
+				[5,4,6,7,0,1,3,2],
+				[6,7,4,5,3,2,1,0],
+				[7,6,5,4,2,3,0,1]])
+Quaternion = IntGroup(TQ,names=Qnames)
+QDaction = lambda a: float(a!=Quaternion.id)
 
 
 

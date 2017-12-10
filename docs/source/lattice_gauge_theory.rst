@@ -4,18 +4,18 @@ lattice\_gauge\_theory package
 Submodules
 ----------
 
-lattice\_gauge\_theory\.cluster module
---------------------------------------
+lattice\_gauge\_theory\.field module
+------------------------------------
 
-.. automodule:: lattice_gauge_theory.cluster
+.. automodule:: lattice_gauge_theory.field
     :members:
     :undoc-members:
     :show-inheritance:
 
-lattice\_gauge\_theory\.init\_lattice module
---------------------------------------------
+lattice\_gauge\_theory\.groups module
+-------------------------------------
 
-.. automodule:: lattice_gauge_theory.init_lattice
+.. automodule:: lattice_gauge_theory.groups
     :members:
     :undoc-members:
     :show-inheritance:
@@ -28,18 +28,10 @@ lattice\_gauge\_theory\.lattice module
     :undoc-members:
     :show-inheritance:
 
-lattice\_gauge\_theory\.lattice\_site module
---------------------------------------------
+lattice\_gauge\_theory\.utils module
+------------------------------------
 
-.. automodule:: lattice_gauge_theory.lattice_site
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-lattice\_gauge\_theory\.plaquette module
-----------------------------------------
-
-.. automodule:: lattice_gauge_theory.plaquette
+.. automodule:: lattice_gauge_theory.utils
     :members:
     :undoc-members:
     :show-inheritance:

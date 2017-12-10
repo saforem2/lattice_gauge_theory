@@ -1,3 +1,4 @@
+from __future__ import division
 import numpy as np
 from lattice_gauge_theory.utils import *
 
@@ -14,7 +15,7 @@ class Lattice(object):
     """
 
     def __init__(self, shape, link_dtype=int, site_dtype=int,
-                 care='links', p_action=True):
+                 care='links', plaq_arrays=True):
         """
         Initializes lattice.
 
@@ -27,7 +28,7 @@ class Lattice(object):
             site_dtype (data-type):
                 Data type of information stored on the sites of the lattice.
                 (DEFAULT: int)
-            p_action (bool):
+            plaq_arrays (bool):
                 Flag specifying if we wish to consider the plaquette (Wilson)
                 action.
         """
@@ -38,21 +39,20 @@ class Lattice(object):
         self.num_sites = np.product(shape)
         self.num_links = self.num_sites * self.num_dims
         if site_dtype is not None:
-            self.__dict__['sites'] = np.zeros(shape, dtype=site_dtype)
+            self.__dict__['sites'] = np.empty(shape, dtype=site_dtype)
             self.sites_flat = np.ravel(self.sites)  # flattened for iterating
         if link_dtype is not None:
-            self.__dict__['links'] = np.zeros(shape + (len(shape),),
+            self.__dict__['links'] = np.empty(shape + (len(shape),),
                                               dtype=link_dtype)
             self.links_flat = np.ravel(self.links)
 
-        if p_action:
+        if plaq_arrays:
             # Generate arrays for quickly accessing plaquettes.
             # Potentially memory restrictive.
 
             # p_sites is an array of link indices for all plaquettes,
             # ordered by sites and direction
-            self.p_sites = np.zeros(shape + (self.num_dims,
-                                             self.num_dims, 4),
+            self.p_sites = np.empty(shape + (self.num_dims, self.num_dims, 4),
                                     dtype=object)
             for i in multirange(shape):
                 for j, k in multirange((self.num_dims, self.num_dims)):
@@ -60,26 +60,27 @@ class Lattice(object):
                         continue
                     #  import pdb
                     #  pdb.set_trace()
-                    self.p_sites[i + (j,k)] = sp_links(i,j,k)
+                    self.p_sites[i + (j,k)] = site_plaq_links(i,j,k)
                     for l in range(4):
-                        self.p_sites[i+(j,k,l)] = tuple(
-                            np.mod(self.p_sites[i+(j,k,l)],
-                                   shape+(self.num_dims,))
+                        self.p_sites[i + (j,k,l)] = tuple(
+                            np.mod(self.p_sites[i + (j,k,l)],
+                                   shape + (self.num_dims,))
                         )
 
             # p_links is an array of link indices for all plaquettes,
             # ordered by link, direction, and sign.
             # So indexing takes the form:
             #   p_links[link, direction, # sign, side of plaquette]
-            self.p_links = np.zeros(shape + (self.num_dims,
-                                             self.num_dims, 2, 4),
-                                            dtype=object)
+            self.p_links = np.zeros(shape + (self.num_dims, self.num_dims, 2,
+                                             4), dtype=object)
             for i in multirange(shape):
                 for dE, d in multirange((self.num_dims, self.num_dims)):
                     if dE == d:
                         continue
                     for s in {-1, 1}:
-                        self.p_links[i+(dE,d,(1-s)//2)] = lp_links(i+(dE,),d,s)
+                        self.p_links[i+(dE,d,(1-s)//2)] = (
+                            link_plaq_links(i+(dE,),d,s)
+                        )
                         for j in range(4):
                             self.p_links[i+(dE,d,(1-s)//2,j)] = tuple(
                                 np.mod(self.p_links[i+(dE,d,(1-s)//2,j)],

@@ -1,3 +1,4 @@
+from __future__ import division
 import numpy as np
 from lattice_gauge_theory.lattice import Lattice
 from lattice_gauge_theory.groups import *
