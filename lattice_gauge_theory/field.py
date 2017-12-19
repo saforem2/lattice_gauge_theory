@@ -32,7 +32,8 @@ class Field(object):
         Currently, vertices are not initialized.
         """
         if 'links' in ls:
-            if init == 'id':    # set all links to the group identity
+            if init == 'id':
+                # set all links to the group identity
                 self.lattice.links[:] = self.group.id
             elif isinstance(init, numbers.Integral) and init < self.group.size:
                 # set the entire lattice to the integer value of init

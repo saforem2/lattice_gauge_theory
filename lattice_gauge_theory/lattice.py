@@ -13,7 +13,6 @@ class Lattice(object):
 
     Methods:
     """
-
     def __init__(self, shape, link_dtype=int, site_dtype=int,
                  care='links', plaq_arrays=True):
         """
@@ -39,10 +38,10 @@ class Lattice(object):
         self.num_sites = np.product(shape)
         self.num_links = self.num_sites * self.num_dims
         if site_dtype is not None:
-            self.__dict__['sites'] = np.empty(shape, dtype=site_dtype)
+            self.__dict__['sites'] = np.zeros(shape, dtype=site_dtype)
             self.sites_flat = np.ravel(self.sites)  # flattened for iterating
         if link_dtype is not None:
-            self.__dict__['links'] = np.empty(shape + (len(shape),),
+            self.__dict__['links'] = np.zeros(shape + (len(shape),),
                                               dtype=link_dtype)
             self.links_flat = np.ravel(self.links)
 
