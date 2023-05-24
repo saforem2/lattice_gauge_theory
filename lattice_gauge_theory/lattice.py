@@ -25,7 +25,7 @@ class Lattice(object):
         #  self.links = sites.links
         self.number_of_sites = len(self.sites)
         #  self.number_of_links = len(self.links)
-        self.site_labels = set([site.label for site in self.sites])
+        self.site_labels = {site.label for site in self.sites}
         #  self.site_populations = Counter([site.label for site in self.sites])
         self.enforce_periodic_boundary_conditions()
         self.initialize_site_lookup_table()
@@ -79,9 +79,7 @@ class Lattice(object):
         Returns:
             None
         """
-        self.site_lookup = {}
-        for site in self.sites:
-            self.site_lookup[site.number] = site
+        self.site_lookup = {site.number: site for site in self.sites}
 
     def site_with_id(self, number):
         """
@@ -137,7 +135,7 @@ class Lattice(object):
         """
         site_connections = {}
         for initial_site in self.sites:
-            if not initial_site.label in site_connections:
+            if initial_site.label not in site_connections:
                 site_connections[initial_site.label] = []
             for final_site in initial_site.p_neighbors:
                 if final_site.label not in (
@@ -168,10 +166,7 @@ class Lattice(object):
             (list(Cluster)): List of Cluster objects for groups of contiguous
             sites.
         """
-        if site_labels:
-            selected_sites = self.selec_sites(site_labels)
-        else:
-            selected_sites = self.sites
+        selected_sites = self.selec_sites(site_labels) if site_labels else self.sites
         initial_clusters = [cluster.Cluster([site]) for site in selected_sites]
         if site_labels:
             blocking_sites = self.site_labels - set(site_labels)
